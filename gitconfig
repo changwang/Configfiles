@@ -1,0 +1,16 @@
+[user]
+	name = Chang Wang
+	email = changwang83@gmail.com
+	
+[color]
+	status = auto
+	branch = auto
+	ui = auto
+
+[github]
+	user = wangchang
+	token = dfa367d5e484c2c56edd716f2e9c5707
+[gui]
+	recentrepo = /Users/changwang/eclipse/workspace/Nodes
+[core]
+	editor = vim
