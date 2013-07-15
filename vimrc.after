@@ -1,0 +1,31 @@
+set t_Co=256
+set showmode
+set tabstop=4
+set softtabstop=4
+set expandtab
+set noswapfile
+
+set gfn=Ubuntu\ Mono\ 18
+
+colorscheme Tomorrow-Night
+
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+
+inoremap <down> <NOP>
+inoremap <left> <NOP>
+inoremap <right> <NOP>
+inoremap <up> <NOP>
+
+if &term =~ '256color'
+      set t_ut=
+    endif
+
+    set listchars=tab:▸\ ,eol:¬
+
+    highlight NonText guifg=#4A4A59
+    highlight SpecialKey guifg=#4A4A59
+endif
+
