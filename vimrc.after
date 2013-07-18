@@ -1,13 +1,25 @@
-set t_Co=256
-set showmode
+set encoding=utf-8
+set laststatus=2
+set noshowmode
+
 set tabstop=4
 set softtabstop=4
 set expandtab
+
 set noswapfile
+set hlsearch
+set incsearch
+set scrolloff=5
 
-set gfn=Ubuntu\ Mono\ 18
+set icon
+set ruler
+set nobackup
 
-colorscheme Tomorrow-Night
+colorscheme Tomorrow
+
+if &term =~ '256color'
+    set t_ut=
+endif
 
 noremap <Up> <NOP>
 noremap <Down> <NOP>
@@ -19,13 +31,10 @@ inoremap <left> <NOP>
 inoremap <right> <NOP>
 inoremap <up> <NOP>
 
-if &term =~ '256color'
-      set t_ut=
-    endif
+set listchars=tab:▸\ ,eol:¬
 
-    set listchars=tab:▸\ ,eol:¬
+highlight NonText guifg=#4A4A59
+highlight SpecialKey guifg=#4A4A59
 
-    highlight NonText guifg=#4A4A59
-    highlight SpecialKey guifg=#4A4A59
-endif
+imap jj <ESC>
 

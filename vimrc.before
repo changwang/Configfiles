@@ -1,2 +1,5 @@
+set t_Co=256
 let mapleader=","
+
+set rtp+=/opt/python/lib/python2.7/site-packages/powerline/bindings/vim
 
