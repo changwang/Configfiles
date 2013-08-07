@@ -1,5 +1,7 @@
-set t_Co=256
 let mapleader=","
 
 set rtp+=/opt/python/lib/python2.7/site-packages/powerline/bindings/vim
+
+call janus#disable_plugin('NrrwRgn', "I do't know what it is")
+call janus#disable_plugin('Vrrom', "I don't do ruby test")
 
