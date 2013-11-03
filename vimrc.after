@@ -1,34 +1,45 @@
+execute pathogen#infect()
+
+let mapleader=","
+set nocompatible
+syntax enable
 set encoding=utf-8
+set noshowcmd
 set laststatus=2
-set noshowmode
+filetype plugin indent on
 
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set nowrap
+set tabstop=4 shiftwidth=4
 set expandtab
-set autoread
+set backspace=indent,eol,start
 
-set noswapfile
-set hlsearch
-set incsearch
-set scrolloff=5
-set ignorecase
-set smartcase
-set gdefault
-
-set icon
+set number
 set ruler
-set nobackup
+set cursorline
 set hidden
 
-set lines=42
-set columns=140
+set nobackup
+set noswapfile
+
+set notimeout
+set ttimeout
+set ttimeoutlen=100
+
+set autoread
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set scrolloff=5
+set nobackup
+set lines=60
+set columns=227
 set t_Co=256
 
 colorscheme summerfruit256
 
 if &term =~ '256color'
-  set t_ut=
+    set t_ut=
 endif
 
 noremap <Up> <NOP>
@@ -47,21 +58,33 @@ inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
-au FocusLost * :wa
-
-set list
-"set listchars=tab:▸\ ,eol:¬
-set listchars=tab:▸\ ,
-
-highlight NonText guifg=#4A4A59
-highlight SpecialKey guifg=#4A4A59
-
 imap jj <ESC>
-
-nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 nnoremap <leader>w <C-w>v<C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
+map Q gq
+
+let g:airline_theme='light'
+let g:airline_powerline_fonts=1
+let g:airline_enable_branch=1
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_branch_prefix = ' '
+let g:airline_readonly_symbol = ''
+let g:airline_linecolumn_prefix = ' '
+"let g:airline#extensions#tabline#enabled = 1
+
+" nerdtree map
+map <leader>n :NERDTreeToggle<CR>
+
+map <D-p> :CtrlP .<CR>
+
+"map <leader>b :MBEToggle<cr>
+
+map <C-]> :TagbarToggle<CR>
