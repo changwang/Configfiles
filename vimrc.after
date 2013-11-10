@@ -1,26 +1,42 @@
+" plugin manager
 execute pathogen#infect()
 
+" general config
 let mapleader=","
-set nocompatible
+
+filetype plugin on 
+filetype indent on
 syntax enable
+
+set nocompatible
 set encoding=utf-8
+
 set noshowcmd
 set laststatus=2
-filetype plugin indent on
 
-set nowrap
-set tabstop=4 shiftwidth=4
+" indentation
+set autoindent
+set smartindent
+set smarttab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 set expandtab
 set backspace=indent,eol,start
 
+" editor
+set nowrap
 set number
 set ruler
 set cursorline
 set hidden
 
+" backup
 set nobackup
+set nowb
 set noswapfile
 
+" interval timeout
 set notimeout
 set ttimeout
 set ttimeoutlen=100
@@ -32,11 +48,19 @@ set ignorecase
 set smartcase
 set scrolloff=5
 set nobackup
-set lines=60
-set columns=227
 set t_Co=256
+set cmdheight=1
+set noerrorbells
+set novisualbell
+set t_vb=
 
-colorscheme summerfruit256
+set ai
+set si
+set wrap
+
+set shell=/usr/local/bin/zsh
+
+colorscheme Tomorrow-Night-Bright
 
 if &term =~ '256color'
     set t_ut=
@@ -68,6 +92,13 @@ nnoremap <C-l> <C-w>l
 
 map Q gq
 
+" plugins
+
+" resolve supertab snipmate conflict
+
+let g:SuperTabDefaultCompletionType = "context"
+
+" vim snippet
 let g:airline_theme='light'
 let g:airline_powerline_fonts=1
 let g:airline_enable_branch=1
@@ -83,8 +114,11 @@ let g:airline_linecolumn_prefix = ' '
 " nerdtree map
 map <leader>n :NERDTreeToggle<CR>
 
+" ctrlp
 map <D-p> :CtrlP .<CR>
 
-"map <leader>b :MBEToggle<cr>
-
+" tagbar
 map <C-]> :TagbarToggle<CR>
+
+" nerdcommenter
+map <D-/> <leader>c<space><CR>
