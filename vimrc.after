@@ -4,9 +4,10 @@ execute pathogen#infect()
 " general config
 let mapleader=","
 
-filetype plugin on 
-filetype indent on
+filetype plugin indent on
 syntax enable
+
+set background=dark
 
 set nocompatible
 set encoding=utf-8
@@ -29,7 +30,12 @@ set nowrap
 set number
 set ruler
 set cursorline
+set nostartofline
 set hidden
+set title
+set wildmenu
+set wildmode=full
+set textwidth=100
 
 " backup
 set nobackup
@@ -52,7 +58,7 @@ set t_Co=256
 set cmdheight=1
 set noerrorbells
 set novisualbell
-set t_vb=
+set vb t_vb=
 
 set ai
 set si
@@ -60,7 +66,7 @@ set wrap
 
 set shell=/usr/local/bin/zsh
 
-colorscheme Tomorrow-Night-Bright
+colorscheme kolor
 
 if &term =~ '256color'
     set t_ut=
@@ -92,6 +98,8 @@ nnoremap <C-l> <C-w>l
 
 map Q gq
 
+autocmd BufWritePre * :%s/\s\+$//e
+
 " plugins
 
 " resolve supertab snipmate conflict
@@ -116,9 +124,18 @@ map <leader>n :NERDTreeToggle<CR>
 
 " ctrlp
 map <D-p> :CtrlP .<CR>
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class
+let g:ctrlp_custom_ignore = {
+    \ 'dir': '\v[\/]\.(git|hg|svn)$',
+    \ }
 
 " tagbar
-map <C-]> :TagbarToggle<CR>
+map <leader>t :tag<space>
+nnoremap <silent> <F8> :TagbarToggle<CR>
 
 " nerdcommenter
 map <D-/> <leader>c<space><CR>
+
+" Dash
+map <leader>d :Dash<CR>
+map <leader>!d :Dash!<CR>
