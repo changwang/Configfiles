@@ -1,141 +1,36 @@
-" plugin manager
-execute pathogen#infect()
 
-" general config
-let mapleader=","
+" Indent line
+let g:indentLine_color_term = 239
+" let g:indentLine_char = '┆'
+let g:indentLine_color_gui = '#CCCCCC'
+let g:indentLine_fileTypeExclude = ['xml', 'txt', 'sh']
 
-filetype plugin indent on
-syntax enable
+" delimitmate
+let delimitMate_expand_cr = 1
 
-set background=dark
+" rainbow parenthese
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
 
-set nocompatible
-set encoding=utf-8
-
-set noshowcmd
-set laststatus=2
-
-" indentation
-set autoindent
-set smartindent
-set smarttab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-set backspace=indent,eol,start
-
-" editor
-set nowrap
-set number
-set ruler
-set cursorline
-set nostartofline
-set hidden
-set title
-set wildmenu
-set wildmode=full
-set textwidth=100
-
-" backup
-set nobackup
-set nowb
-set noswapfile
-
-" interval timeout
-set notimeout
-set ttimeout
-set ttimeoutlen=100
-
-set autoread
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
-set scrolloff=5
-set nobackup
-set t_Co=256
-set cmdheight=1
-set noerrorbells
-set novisualbell
-set vb t_vb=
-
-set ai
-set si
-set wrap
-
-set shell=/usr/local/bin/zsh
-
-colorscheme kolor
-
-if &term =~ '256color'
-    set t_ut=
-endif
-
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
-
-inoremap <down> <NOP>
-inoremap <left> <NOP>
-inoremap <right> <NOP>
-inoremap <up> <NOP>
-
-nnoremap <leader><space> :noh<cr>
-
-inoremap <F1> <ESC>
-nnoremap <F1> <ESC>
-vnoremap <F1> <ESC>
-
-imap jj <ESC>
-
-nnoremap <leader>w <C-w>v<C-w>l
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-
-map Q gq
-
-autocmd BufWritePre * :%s/\s\+$//e
-
-" plugins
-
-" resolve supertab snipmate conflict
-
-let g:SuperTabDefaultCompletionType = "context"
-
-" vim snippet
-let g:airline_theme='light'
-let g:airline_powerline_fonts=1
-let g:airline_enable_branch=1
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_branch_prefix = ' '
-let g:airline_readonly_symbol = ''
-let g:airline_linecolumn_prefix = ' '
-"let g:airline#extensions#tabline#enabled = 1
-
-" nerdtree map
-map <leader>n :NERDTreeToggle<CR>
-
-" ctrlp
-map <D-p> :CtrlP .<CR>
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class
-let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/]\.(git|hg|svn)$',
-    \ }
-
-" tagbar
-map <leader>t :tag<space>
-nnoremap <silent> <F8> :TagbarToggle<CR>
-
-" nerdcommenter
-map <D-/> <leader>c<space><CR>
-
-" Dash
-map <leader>d :Dash<CR>
-map <leader>!d :Dash!<CR>
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
