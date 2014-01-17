@@ -246,3 +246,7 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
+" Auto Format
+let g:formatprg_java = "astyle"
+let g:formatprg_args_java = "--mode=java --style=google -fxjcpHxes4"
+noremap <F3> :Autoformat<CR><CR>
