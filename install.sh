@@ -7,17 +7,34 @@ git clone https://github.com/changwang/Configfiles.git
 # install my vim config and bundles
 cd Configfiles
 
-# 1. create required folders
-mkdir -p ~/.vim/autoload ~/.vim/bundle ~/.vim/colors
+# 1. config shell
+echo "***************** configuring shell *****************"
+
+# 1.1 change default shell to zsh (this may ask password)
+chsh -s $(which zsh)
+
+# 1.2 install prezto
+cd ~
+git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+
+# 1.3 go back to my config dir, and copy my zsh config file
+cd -
+cp ./zshrc ~/.zshrc
 
 # 2. install vim pathogen
+echo "***************** installing pathogen *****************"
+
+mkdir -p ~/.vim/autoload ~/.vim/bundle ~/.vim/colors
+
 curl -Sso ~/.vim/autoload/pathogen.vim \
     https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 
 # 3. install my vim config
+echo "***************** installing vim configuration *****************"
 cp ./vimrc ~/.vimrc
 
 # 4. install all bundles
+echo "***************** installing vim bundles *****************"
 cd ~/.vim/bundle
 
 # 4.1 ag.vim
@@ -72,6 +89,7 @@ git clone https://github.com/garbas/vim-snipmate.git
 git clone https://github.com/tpope/vim-surround.git
 
 # 5 vim color theme
+echo "***************** install vim color theme *****************"
 cd /tmp
 
 git clone https://github.com/noahfrederick/vim-hemisu.git
@@ -79,3 +97,4 @@ cd vim-hemisu/colors
 cp hemisu.vim ~/.vim/colors
 
 cd /tmp
+
