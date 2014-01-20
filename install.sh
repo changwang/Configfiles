@@ -88,6 +88,9 @@ git clone https://github.com/garbas/vim-snipmate.git
 # 4.17 vim-surround
 git clone https://github.com/tpope/vim-surround.git
 
+# 4.18 vim auto format
+git clone https://github.com/Chiel92/vim-autoformat.git
+
 # 5 vim color theme
 echo "***************** install vim color theme *****************"
 cd /tmp
