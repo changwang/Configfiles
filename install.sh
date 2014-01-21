@@ -91,6 +91,9 @@ git clone https://github.com/tpope/vim-surround.git
 # 4.18 vim auto format
 git clone https://github.com/Chiel92/vim-autoformat.git
 
+# 4.19 python vim-flake8
+git clone https://github.com/nvie/vim-flake8.git
+
 # 5 vim color theme
 echo "***************** install vim color theme *****************"
 cd /tmp
