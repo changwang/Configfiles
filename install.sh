@@ -37,62 +37,72 @@ cp ./vimrc ~/.vimrc
 echo "***************** installing vim bundles *****************"
 cd ~/.vim/bundle
 
-# 4.1 ag.vim
+# SearchComplete
+git clone https://github.com/vim-scripts/SearchComplete.git
+# ag.vim
 git clone https://github.com/rking/ag.vim.git
-
-# 4.2 ctrlp.vim
+# ctrlp.vim
 git clone https://github.com/kien/ctrlp.vim.git
-
-# 4.3 delimiteMath
+# dash.vim
+git clone https://github.com/rizzatti/dash.vim.git
+# delimitMate
 git clone https://github.com/Raimondi/delimitMate.git
-
-# 4.4 emmet-vim
+# emmet-vim
 git clone https://github.com/mattn/emmet-vim.git
-
-# 4.5 indentLine
+# funcoo.vim
+git clone https://github.com/rizzatti/funcoo.vim.git
+# goyo.vim
+git clone https://github.com/junegunn/goyo.vim.git
+# indentLine
 git clone https://github.com/Yggdroot/indentLine.git
-
-# 4.6 nerdcommenter.vim
+# matchit
+git clone https://github.com/tmhedberg/matchit.git
+# minibufexpl.vim
+git clone https://github.com/fholgado/minibufexpl.vim.git
+# nerdcommenter
 git clone https://github.com/scrooloose/nerdcommenter.git
-
-# 4.7 nerdtree
+# nerdtree
 git clone https://github.com/scrooloose/nerdtree.git
-
-# 4.8 rainbow_parentheses.vim
+# python-syntax
+git clone https://github.com/hdima/python-syntax.git
+# rainbow_parentheses.vim
 git clone https://github.com/kien/rainbow_parentheses.vim.git
-
-# 4.9 snipmate.vim
-git clone https://github.com/ervandew/snipmate.vim.git
-
-# 4.10 supertab
+# supertab
 git clone https://github.com/ervandew/supertab.git
-
-# 4.11 syntastic
+# syntastic
 git clone https://github.com/scrooloose/syntastic.git
-
-# 4.12 tagbar
+# tagbar
 git clone https://github.com/majutsushi/tagbar.git
-
-# 4.13 tlib_vim
+# tlib_vim
 git clone https://github.com/tomtom/tlib_vim.git
-
-# 4.14 vim-addon-mw-utils
+# vim-addon-mw-utils
 git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
-
-# 4.15 vim-airline
+# vim-airline
 git clone https://github.com/bling/vim-airline.git
-
-# 4.16 vim-snipmate
-git clone https://github.com/garbas/vim-snipmate.git
-
-# 4.17 vim-surround
-git clone https://github.com/tpope/vim-surround.git
-
-# 4.18 vim auto format
+# vim-autoformat
 git clone https://github.com/Chiel92/vim-autoformat.git
-
-# 4.19 python vim-flake8
+# vim-easymotion
+git clone https://github.com/Lokaltog/vim-easymotion.git
+# vim-flake8
 git clone https://github.com/nvie/vim-flake8.git
+# vim-fugitive
+git clone https://github.com/tpope/vim-fugitive.git
+# vim-multiple-cursors
+git clone https://github.com/terryma/vim-multiple-cursors.git
+# vim-nerdtree-tabs
+git clone https://github.com/jistr/vim-nerdtree-tabs.git
+# vim-sensible
+git clone https://github.com/tpope/vim-sensible.git
+# vim-signify
+git clone https://github.com/mhinz/vim-signify.git
+# vim-snipmate
+git clone https://github.com/garbas/vim-snipmate.git
+# vim-snippets
+git clone https://github.com/honza/vim-snippets.git
+# vim-surround
+git clone https://github.com/tpope/vim-surround.git
+# vim-zenroom2
+git clone https://github.com/amix/vim-zenroom2.git
 
 # 5 vim color theme
 echo "***************** install vim color theme *****************"

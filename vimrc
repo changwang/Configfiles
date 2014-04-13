@@ -1,5 +1,6 @@
 " plugin manager
-execute pathogen#infect()
+call pathogen#infect()
+call pathogen#helptags()
 
 " general config
 let mapleader=","
@@ -7,18 +8,16 @@ let g:mapleader=","
 
 set history=1000
 
-filetype off
-filetype plugin indent off
-set rtp+=$GOROOT/misc/vim
 filetype plugin indent on
 syntax on
 
-set background=dark
+set background=light
 
 set nocompatible
 set encoding=utf-8
 
-set noshowcmd
+set showcmd
+set showmode
 set laststatus=2
 
 " indentation
@@ -28,6 +27,7 @@ set smarttab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
+set shiftround
 set expandtab
 set backspace=indent,eol,start
 
@@ -43,8 +43,12 @@ set wildmenu
 set wildmode=full
 set textwidth=100
 set magic
-" set lbr
-" set spell
+set title
+autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
+set list
+set lcs=tab:▒░,trail:▓,extends:»,precedes:«,eol:¬
+set listchars=tab:▒░,trail:▓,extends:»,precedes:«,eol:¬
+nmap <leader>l :set list!<CR>
 
 " backup
 set nobackup
@@ -54,7 +58,7 @@ set noswapfile
 " interval timeout
 set notimeout
 set ttimeout
-set ttimeoutlen=100
+set ttimeoutlen=50
 
 set autoread
 set hlsearch
@@ -76,10 +80,7 @@ set wrap
 
 set shell=/usr/local/bin/zsh
 
-colorscheme hemisu
-let g:molokai_original = 1
-let g:rehash256 = 1
-
+colors peaksea
 if &term =~ '256color'
     set t_ut=
 endif
@@ -108,9 +109,9 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-map Q gq
+:nnoremap <CR> :nohlsearch<CR>
 
-autocmd BufWritePre * :%s/\s\+$//e
+map Q gq
 
 if executable('ag')
     set grepprg=ag\ --nogroup\ --nocolor
@@ -123,72 +124,69 @@ map <leader>ct :!/usr/local/bin/ctags -R .<CR>
 highlight ColorColumn ctermbg=magenta guibg=magenta
 call matchadd('ColorColumn', '\%101v', 100)
 
-" go formatter after save buffer
-au FileType go au BufWritePre <buffer> Fmt
+cnoremap %% <C-R>=expand('%:h').'/'<CR>
 
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
+augroup vimrEx
+    autocmd BufReadPost *
+        \ if line("'\"") > 0 &&line("'\"") <= line("$") |
+        \   exe "normal g`\"" |
+        \ endif
+
+    autocmd BufWritePre * :%s/\s\+$//e
+augroup END
 
 " plugins
 
 " resolve supertab snipmate conflict
 let g:SuperTabDefaultCompletionType = "context"
 
+" syntastic
+let g:syntastic_check_on_open = 1
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_python_checkers=['flake8']
+let g:syntastic_java_checkers=['checkstyle']
+let g:syntastic_java_checkstyle_classpath = "/Users/chang.wang/Libs/checkstyle/checkstyle-5.6-all.jar"
+let g:syntastic_java_checkstyle_conf_file = "/Users/chang.wang/Libs/checkstyle/sun_checks.xml"
+
 " vim airline
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 
+"let g:airline_theme = 'bubblegum'
 let g:airline_theme = 'light'
 let g:airline_powerline_fonts = 0
 let g:airline_enable_branch = 1
 
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '◀'
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
 let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.branch = '⎇'
 let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
-
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
 
 " nerdtree map
-map <leader>n :NERDTreeToggle<CR>
+map <leader>n :NERDTreeTabsToggle<CR>
+let g:NERDChristmasTree = 1
+let NERDTreeIgnore=['^\.gradle$[[dir]]', '^classes$[[dir]]', '^target$[[dir]]', '^bin$[[dir]]', '^build$[[dir]]', '\.pyc$', '\~$']
 
 " ctrlp
-map <D-p> :CtrlP .<CR>
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class,*~
+map <D-p>  :<C-U>CtrlP<CR>
+set suffixes=.bak,.exe,.o,.obj,.swp,.ncb,.opt,.pdb,.class,.pyc
+set wildignore+=*/tmp/*,*/target/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class
+let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/]\.(git|hg|svn)$',
+    \ 'dir': '\v[\/](\.git|\.hg|\.svn|target)$',
+    \ 'file': '\v\.(pyc|so|dll|class|exe)$',
     \ }
 
 " tagbar
@@ -200,15 +198,14 @@ map <D-/> <leader>c<space><CR>
 
 " mini buffer explorer
 map <leader>f :MBEFocus<CR>
+let g:miniBufExplAutoStart = 10
+noremap <M-TAB> :bnext<CR>
+noremap <M-S-TAB> :bprevious<CR>
 
 " Dash
 map <leader>d :Dash<CR>
 map <leader>!d :Dash!<CR>
 
-" You complete me
-let g:ycm_filetype_blacklist = {
-    \ 'tagbar' : 1,
-\}
 
 " Indent line
 let g:indentLine_color_term = 239
@@ -250,3 +247,10 @@ au Syntax * RainbowParenthesesLoadBraces
 let g:formatprg_java = "astyle"
 let g:formatprg_args_java = "--mode=java --style=google -fxjcpHxes4"
 noremap <F3> :Autoformat<CR><CR>
+
+" Goyo & vim-zenroom2
+nnoremap <silent> <leader>z :Goyo<cr>
+let g:goyo_width = 120
+let g:goyo_margin_top = 2
+let g:goyo_margin_bottom = 2
+
