@@ -109,7 +109,10 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-:nnoremap <CR> :nohlsearch<CR>
+set splitbelow
+set splitright
+
+nnoremap <CR> :nohlsearch<CR>
 
 map Q gq
 
@@ -253,4 +256,3 @@ nnoremap <silent> <leader>z :Goyo<cr>
 let g:goyo_width = 120
 let g:goyo_margin_top = 2
 let g:goyo_margin_bottom = 2
-
