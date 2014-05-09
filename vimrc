@@ -160,8 +160,8 @@ let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_warning_symbol = 's⚠'
 let g:syntastic_python_checkers=['flake8']
 let g:syntastic_java_checkers=['checkstyle']
-let g:syntastic_java_checkstyle_classpath = "/Users/chang.wang/Libs/checkstyle/checkstyle-5.7-all.jar"
-let g:syntastic_java_checkstyle_conf_file = "/Users/chang.wang/Libs/checkstyle/sun_checks.xml"
+let g:syntastic_java_checkstyle_classpath = "/checkstyle/checkstyle-5.7-all.jar"
+let g:syntastic_java_checkstyle_conf_file = "/checkstyle/sun_checks.xml"
 
 " vim airline
 if !exists('g:airline_symbols')
