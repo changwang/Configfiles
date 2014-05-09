@@ -38,71 +38,65 @@ echo "***************** installing vim bundles *****************"
 cd ~/.vim/bundle
 
 # SearchComplete
-git clone https://github.com/vim-scripts/SearchComplete.git
+  Fetch URL: https://github.com/vim-scripts/SearchComplete.git
 # ag.vim
-git clone https://github.com/rking/ag.vim.git
+  Fetch URL: https://github.com/rking/ag.vim.git
 # ctrlp.vim
-git clone https://github.com/kien/ctrlp.vim.git
-# dash.vim
-git clone https://github.com/rizzatti/dash.vim.git
+  Fetch URL: https://github.com/kien/ctrlp.vim.git
 # delimitMate
-git clone https://github.com/Raimondi/delimitMate.git
+  Fetch URL: https://github.com/Raimondi/delimitMate.git
 # emmet-vim
-git clone https://github.com/mattn/emmet-vim.git
-# funcoo.vim
-git clone https://github.com/rizzatti/funcoo.vim.git
+  Fetch URL: https://github.com/mattn/emmet-vim.git
 # goyo.vim
-git clone https://github.com/junegunn/goyo.vim.git
+  Fetch URL: https://github.com/junegunn/goyo.vim.git
 # indentLine
-git clone https://github.com/Yggdroot/indentLine.git
+  Fetch URL: https://github.com/Yggdroot/indentLine.git
 # matchit
-git clone https://github.com/tmhedberg/matchit.git
-# minibufexpl.vim
-git clone https://github.com/fholgado/minibufexpl.vim.git
+  Fetch URL: https://github.com/tmhedberg/matchit.git
+# neocomplete.vim
+  Fetch URL: https://github.com/Shougo/neocomplete.vim.git
 # nerdcommenter
-git clone https://github.com/scrooloose/nerdcommenter.git
-# nerdtree
-git clone https://github.com/scrooloose/nerdtree.git
+  Fetch URL: https://github.com/scrooloose/nerdcommenter.git
 # python-syntax
-git clone https://github.com/hdima/python-syntax.git
+  Fetch URL: https://github.com/hdima/python-syntax.git
 # rainbow_parentheses.vim
-git clone https://github.com/kien/rainbow_parentheses.vim.git
+  Fetch URL: https://github.com/kien/rainbow_parentheses.vim.git
 # supertab
-git clone https://github.com/ervandew/supertab.git
+  Fetch URL: https://github.com/ervandew/supertab.git
 # syntastic
-git clone https://github.com/scrooloose/syntastic.git
+  Fetch URL: https://github.com/scrooloose/syntastic.git
 # tagbar
-git clone https://github.com/majutsushi/tagbar.git
+  Fetch URL: https://github.com/majutsushi/tagbar.git
 # tlib_vim
-git clone https://github.com/tomtom/tlib_vim.git
+  Fetch URL: https://github.com/tomtom/tlib_vim.git
+# ultisnips
+  Fetch URL: https://github.com/SirVer/ultisnips.git
 # vim-addon-mw-utils
-git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
+  Fetch URL: https://github.com/MarcWeber/vim-addon-mw-utils.git
 # vim-airline
-git clone https://github.com/bling/vim-airline.git
+  Fetch URL: https://github.com/bling/vim-airline.git
 # vim-autoformat
-git clone https://github.com/Chiel92/vim-autoformat.git
+  Fetch URL: https://github.com/Chiel92/vim-autoformat.git
 # vim-easymotion
-git clone https://github.com/Lokaltog/vim-easymotion.git
+  Fetch URL: https://github.com/Lokaltog/vim-easymotion.git
 # vim-flake8
-git clone https://github.com/nvie/vim-flake8.git
+  Fetch URL: https://github.com/nvie/vim-flake8.git
 # vim-fugitive
-git clone https://github.com/tpope/vim-fugitive.git
+  Fetch URL: https://github.com/tpope/vim-fugitive.git
+# vim-mark
+  Fetch URL: https://github.com/Yggdroot/vim-mark.git
 # vim-multiple-cursors
-git clone https://github.com/terryma/vim-multiple-cursors.git
-# vim-nerdtree-tabs
-git clone https://github.com/jistr/vim-nerdtree-tabs.git
+  Fetch URL: https://github.com/terryma/vim-multiple-cursors.git
 # vim-sensible
-git clone https://github.com/tpope/vim-sensible.git
+  Fetch URL: https://github.com/tpope/vim-sensible.git
 # vim-signify
-git clone https://github.com/mhinz/vim-signify.git
-# vim-snipmate
-git clone https://github.com/garbas/vim-snipmate.git
+  Fetch URL: https://github.com/mhinz/vim-signify.git
+# vim-sleuth
+  Fetch URL: https://github.com/tpope/vim-sleuth.git
 # vim-snippets
-git clone https://github.com/honza/vim-snippets.git
+  Fetch URL: https://github.com/honza/vim-snippets.git
 # vim-surround
-git clone https://github.com/tpope/vim-surround.git
-# vim-zenroom2
-git clone https://github.com/amix/vim-zenroom2.git
+  Fetch URL: https://github.com/tpope/vim-surround.git
 
 # 5 vim color theme
 echo "***************** install vim color theme *****************"
