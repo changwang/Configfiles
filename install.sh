@@ -43,6 +43,8 @@ cp ./vimrc ~/.vimrc
 echo "***************** installing vim bundles *****************"
 cd ~/.vim/bundle
 
+# NrrwRgn
+git clone https://github.com/chrisbra/NrrwRgn.git
 # SearchComplete
 git clone https://github.com/vim-scripts/SearchComplete.git
 # ag.vim
@@ -73,6 +75,8 @@ git clone https://github.com/ervandew/supertab.git
 git clone https://github.com/scrooloose/syntastic.git
 # tagbar
 git clone https://github.com/majutsushi/tagbar.git
+# tcomment_vim
+git clone https://github.com/tomtom/tcomment_vim.git
 # tlib_vim
 git clone https://github.com/tomtom/tlib_vim.git
 # ultisnips
@@ -85,6 +89,8 @@ git clone https://github.com/bling/vim-airline.git
 git clone https://github.com/Chiel92/vim-autoformat.git
 # vim-easymotion
 git clone https://github.com/Lokaltog/vim-easymotion.git
+# vim-endwise
+git clone https://github.com/tpope/vim-endwise.git
 # vim-flake8
 git clone https://github.com/nvie/vim-flake8.git
 # vim-fugitive
@@ -93,6 +99,8 @@ git clone https://github.com/tpope/vim-fugitive.git
 git clone https://github.com/Yggdroot/vim-mark.git
 # vim-multiple-cursors
 git clone https://github.com/terryma/vim-multiple-cursors.git
+# vim-repeat
+git clone https://github.com/tpope/vim-repeat.git
 # vim-sensible
 git clone https://github.com/tpope/vim-sensible.git
 # vim-signify
@@ -103,6 +111,15 @@ git clone https://github.com/tpope/vim-sleuth.git
 git clone https://github.com/honza/vim-snippets.git
 # vim-surround
 git clone https://github.com/tpope/vim-surround.git
+# vim-unimpaired
+git clone https://github.com/tpope/vim-unimpaired.git
+# vim2hs
+git clone https://github.com/dag/vim2hs.git
+# vimproc.vim
+git clone https://github.com/Shougo/vimproc.vim.git
+# vimshell.vim
+git clone https://github.com/Shougo/vimshell.vim.git
+
 
 # 5 vim color theme
 echo "***************** install vim color theme *****************"
