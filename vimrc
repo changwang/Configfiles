@@ -195,16 +195,8 @@ let g:airline#extensions#ctrlp#color_template = 'normal'
 let g:airline#extensions#ctrlp#color_template = 'visual'
 let g:airline#extensions#ctrlp#color_template = 'replace'
 
-" CtrlP
-map <C-p> :<C-U>CtrlP<CR>
-map <D-p> :<C-U>CtrlP<CR>
 set suffixes+=.bak,.exe,.o,.obj,.swp,.ncb,.opt,.pdb,.class,.pyc
 set wildignore+=*/tmp/*,*/target/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/](\~|\.git|\.hg|\.svn|\target)$',
-    \ 'file': '\v\.(pyc|so|dll|class|exe)$',
-    \ }
 
 " tagbar
 map <leader>t :tag<space>
@@ -301,3 +293,46 @@ let g:UltiSnipsExpandTrigger = "<TAB>"
 let g:UltiSnipsListSnippets = "<c-TAB>"
 let g:UltiSnipsJumpForwardTrigger = "<TAB>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-TAB>"
+
+" Unite
+let g:unite_source_history_yank_enable = 1
+let g:unite_source_rec_async_command = 'ack -f --nofilter'
+
+call unite#custom#profile('default', 'context', {
+    \ 'start_insert': 1,
+    \ 'winheight': 10,
+    \ 'direction': 'botright',
+    \ 'prompt': '» ',
+    \ })
+
+call unite#custom#source('file_rec,file_rec/async,file_mru,file,buffer,grep',
+      \ 'ignore_pattern', join([
+      \ '\.git/',
+      \ '\.class$',
+      \ '\.pyc$'
+      \ ], '\|'))
+
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+
+nnoremap <C-p> :<C-u>Unite -toggle -start-insert -no-empty file_rec/async:!<CR>
+nnoremap <D-p> :<C-u>Unite -toggle -start-insert -no-empty file_rec/async:!<CR>
+nnoremap <D-y> :<C-u>Unite -no-empty history/yank<CR>
+
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+    let b:SuperTabDisabled = 1
+    imap <buffer> jj <Plug>(unite_insert_leave)
+    imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+    imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+    imap <silent><buffer><expr> <C-x> unite#do_action('split')
+    imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+    imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
+    nmap <buffer> <ESC> <Plug>(unite_exit)
+
+    if executable('ag')
+        let g:unite_source_grep_command = 'ag'
+        let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+        let g:unite_source_grep_recursive_opt = ''
+    endif
+endfunction
