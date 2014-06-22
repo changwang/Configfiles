@@ -121,6 +121,32 @@ map Q gq
 " generate ctag file
 map <leader>ct :!/usr/local/bin/ctags -R .<CR>
 
+" improve move speed
+let g:boostmove = 0
+set updatetime=500
+au CursorMoved * call BoostMoveOn()
+au CursorMovedI * call BoostMoveOn()
+au CursorHold * call BoostMoveOFF()
+au CursorHoldI * call BoostMoveOFF()
+
+function BoostMoveOn()
+    if (winline() != line('$')) && (line('.') != 1)
+        if (winline() == winheight('.')) || (winline() == 1)
+            let g:boostmove=1
+            setlocal nocursorline
+            setlocal syntax=OFF
+        endif
+    endif
+endfunction
+
+function BoostMoveOFF()
+    if g:boostmove == 1
+        let g:boostmove=0
+        setlocal cursorline
+        setlocal syntax=ON
+    endif
+endfunction
+
 " use ag search
 if executable('ag')
     set grepprg=ag\ --nogroup\ --nocolor
