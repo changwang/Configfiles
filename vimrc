@@ -6,6 +6,7 @@ call pathogen#helptags()
 let mapleader=","
 let g:mapleader=","
 
+filetype on
 filetype plugin indent on
 syntax on
 
@@ -21,9 +22,11 @@ set tm=500
 set history=1000
 set si
 
+set statusline=%f\ %m\ %r
+
 " color & schema
-set background=light
-colors hemisu
+set background=dark
+colorscheme ir_black
 if &term =~ '256color'
     set t_ut=
 endif
@@ -51,9 +54,10 @@ set wildmenu
 set wildmode=full
 set textwidth=100
 set magic
-set list
+set nolist
 set lcs=tab:▒░,trail:░,extends:»,precedes:«,eol:¬
 set listchars=tab:▒░,trail:░,extends:»,precedes:«,eol:¬
+set showbreak=↪
 nmap <leader>l :set list!<CR>
 set autowrite
 set autoread
@@ -112,47 +116,24 @@ set splitbelow
 set splitright
 
 " customized keys
-nnoremap <CR> :nohlsearch<CR>
+nnoremap <silent><CR> :nohlsearch<CR>
 noremap <M-TAB> :bnext<CR>
 noremap <M-S-TAB> :bprevious<CR>
 
+nnoremap ww<CR> <ESC>:w<CR>
+map <Leader>a ggVG
+
 map Q gq
+
+" folding
+set foldenable
+set foldmethod=indent
+set foldlevelstart=1
+set foldnestmax=2
 
 " generate ctag file
 map <leader>ct :!/usr/local/bin/ctags -R .<CR>
 
-" improve move speed
-let g:boostmove = 0
-set updatetime=500
-au CursorMoved * call BoostMoveOn()
-au CursorMovedI * call BoostMoveOn()
-au CursorHold * call BoostMoveOFF()
-au CursorHoldI * call BoostMoveOFF()
-
-function BoostMoveOn()
-    if (winline() != line('$')) && (line('.') != 1)
-        if (winline() == winheight('.')) || (winline() == 1)
-            let g:boostmove=1
-            setlocal nocursorline
-            setlocal syntax=OFF
-        endif
-    endif
-endfunction
-
-function BoostMoveOFF()
-    if g:boostmove == 1
-        let g:boostmove=0
-        setlocal cursorline
-        setlocal syntax=ON
-    endif
-endfunction
-
-" use ag search
-if executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-    let g:ctrlp_use_caching = 0
-endif
 nnoremap <D-f> :Ag<space>
 
 " highlight if column exceeds the specified number
@@ -165,80 +146,31 @@ cnoremap %% <C-R>=expand('%:h').'/'<CR>
 " group of auto command
 augroup vimrEx
     autocmd BufReadPost *
-        \ if line("'\"") > 0 &&line("'\"") <= line("$") |
-        \   exe "normal g`\"" |
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \    exe "normal! g`\"" |
         \ endif
-
-    autocmd BufWritePre * :%s/\s\+$//e
     autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
+    autocmd BufWritePre * :%s/\s\+$//e
 augroup END
 
 " plugins
 
-" resolve supertab snipmate conflict
-let g:SuperTabDefaultCompletionType = "context"
-
-" syntastic
-let g:syntastic_check_on_open = 1
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_style_error_symbol = 's✗'
-let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_style_warning_symbol = 's⚠'
-let g:syntastic_python_checkers=['flake8']
-let g:syntastic_java_checkers=['checkstyle']
-let g:syntastic_java_checkstyle_classpath = "/checkstyle/checkstyle-5.7-all.jar"
-let g:syntastic_java_checkstyle_conf_file = "/checkstyle/sun_checks.xml"
-
-" vim airline
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-
-let g:airline_theme = 'light'
-let g:airline_powerline_fonts = 1
-let g:airline_enable_branch = 1
-
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
-
-let g:airline#extensions#syntastic#enabled = 1
-let g:airline#extensions#tagbar#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_tab_type = 0
-
-let g:airline#extensions#tabline#left_sep = ''
-let g:airline#extensions#tabline#left_alt_sep = ''
-let g:airline#extensions#tabline#right_sep = ''
-let g:airline#extensions#tabline#right_alt_sep = ''
-
-let g:airline#extensions#ctrlp#color_template = 'insert'
-let g:airline#extensions#ctrlp#color_template = 'normal'
-let g:airline#extensions#ctrlp#color_template = 'visual'
-let g:airline#extensions#ctrlp#color_template = 'replace'
-
 set suffixes+=.bak,.exe,.o,.obj,.swp,.ncb,.opt,.pdb,.class,.pyc
-set wildignore+=*/tmp/*,*/target/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class
-
-" tagbar
-map <leader>t :tag<space>
-nnoremap <silent> <F8> :TagbarToggle<CR>
-
-" nerdcommenter
-map <D-/> <leader>c<space><CR>
-
-" Indent line
-let g:indentLine_color_term = 239
-let g:indentLine_char = '┆'
-let g:indentLine_color_gui = '#CCCCCC'
-let g:indentLine_fileTypeExclude = ['xml', 'txt', 'sh']
-
-" delimitmate
-let delimitMate_expand_cr = 1
+set wildignore+=*/tmp/*,*/target/*,git,*.so,*.swp,*.zip,*.pyc,
+set wildignore+=*.o,*.a,*.class,*.gem,.svn,*.gar.gz,*.tar.bz2
+let g:ctrlp_custom_ignore = {
+    \ 'dir': '\v[\/](node_modules|target|dist)|(\.(git|hg|svn))$',
+    \ 'file': '\v\.(exe|so|dll|pyc|pyo|o|a|class)$',
+    \ }
+let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+let g:ctrlp_max_files = 0
+let g:ctrlp_lazy_update = 350
+let g:ctrlp_clear_cache_on_exit = 0
+if executable('ag')
+    set grepprg=ag\ --nogroup\ --nocolor\ --column
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+    let g:ctrlp_use_caching = 0
+endif
 
 " rainbow parenthese
 let g:rbpt_colorpairs = [
@@ -268,19 +200,24 @@ au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 au Syntax * RainbowParenthesesLoadChevrons
 
-" Auto Format
-let g:formatprg_java = "astyle"
-let g:formatprg_args_java = "--mode=java --style=google -fxjcpHxes4"
-noremap <F3> :Autoformat<CR><CR>
+" Vim session
+let g:session_autosave = 'yes'
+let g:session_autoload = 'no'
 
-" Goyo
-nnoremap <silent> <leader>z :Goyo<cr>
-let g:goyo_width = 120
-let g:goyo_margin_top = 2
-let g:goyo_margin_bottom = 2
+let g:SuperTabDefaultCompletionType = "context"
 
-" Mark
-noremap <leader><leader>p <Plug>MarkSearchCurrentPrev
+"syntastic
+let g:syntastic_enable_signs = 1
+let g:syntastic_quiet_warnings = 0
+let g:syntastic_check_on_open = 1
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_style_error_symbol = 's✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_style_warning_symbol = 's⚠'
+let g:syntastic_python_checkers=['flake8']
+let g:syntastic_java_checkers=['checkstyle']
+let g:syntastic_java_checkstyle_classpath = "/Users/chang/Libs/checkstyle/checkstyle-5.7-all.jar"
+let g:syntastic_java_checkstyle_conf_file = "/Users/chang/Libs/checkstyle/sun_checks.xml"
 
 " Neocomplete
 let g:acp_enableAtStartup = 0
@@ -314,51 +251,28 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-" UltiSnips
-let g:UltiSnipsExpandTrigger = "<TAB>"
-let g:UltiSnipsListSnippets = "<c-TAB>"
-let g:UltiSnipsJumpForwardTrigger = "<TAB>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-TAB>"
+" tagbar
+nnoremap <silent> <F8> :TagbarToggle<CR>
 
-" Unite
-let g:unite_source_history_yank_enable = 1
-let g:unite_source_rec_async_command = 'ack -f --nofilter'
+" vim-go
+let g:go_disable_autoinstall = 1
+let g:go_fmt_fail_silently = 1
 
-call unite#custom#profile('default', 'context', {
-    \ 'start_insert': 1,
-    \ 'winheight': 10,
-    \ 'direction': 'botright',
-    \ 'prompt': '» ',
-    \ })
+" vim-airline
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline_powerline_fonts = 1
+let g:airline_enable_branch = 1
 
-call unite#custom#source('file_rec,file_rec/async,file_mru,file,buffer,grep',
-      \ 'ignore_pattern', join([
-      \ '\.git/',
-      \ '\.class$',
-      \ '\.pyc$'
-      \ ], '\|'))
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
 
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-
-nnoremap <C-p> :<C-u>Unite -toggle -start-insert -no-empty file_rec/async:!<CR>
-nnoremap <D-p> :<C-u>Unite -toggle -start-insert -no-empty file_rec/async:!<CR>
-nnoremap <D-y> :<C-u>Unite -no-empty history/yank<CR>
-
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-    let b:SuperTabDisabled = 1
-    imap <buffer> jj <Plug>(unite_insert_leave)
-    imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-    imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-    imap <silent><buffer><expr> <C-x> unite#do_action('split')
-    imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-    imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
-    nmap <buffer> <ESC> <Plug>(unite_exit)
-
-    if executable('ag')
-        let g:unite_source_grep_command = 'ag'
-        let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-        let g:unite_source_grep_recursive_opt = ''
-    endif
-endfunction
+" smooth scroll
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 25, 3)<CR>
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 17, 3)<CR>
