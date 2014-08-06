@@ -1,17 +1,70 @@
-" plugin manager
-call pathogen#infect()
-call pathogen#helptags()
-
 " general config
 let mapleader=","
 let g:mapleader=","
 
-filetype on
+" basic configuration
+" set nocompatible
+
+"NeoBundle Scripts-----------------------------
+if has('vim_starting')
+  set nocompatible               " Be iMproved
+
+  " Required:
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+" Required:
+call neobundle#begin(expand('~/.vim/bundle'))
+
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" My Bundles here:
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'flazz/vim-colorschemes'
+NeoBundle 'rking/ag.vim'
+NeoBundle 'jiangmiao/auto-pairs'
+NeoBundle 'FelikZ/ctrlp-py-matcher'
+NeoBundle 'tmhedberg/matchit'
+NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'ervandew/supertab'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'majutsushi/tagbar'
+NeoBundle 'tomtom/tcomment_vim'
+NeoBundle 'fatih/vim-go'
+NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'mhinz/vim-signify'
+NeoBundle 'terryma/vim-smooth-scroll'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimproc.vim', {
+      \ 'build' : {
+      \     'windows' : 'tools\\update-dll-mingw',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
+NeoBundle 'junegunn/vim-pseudocl'
+NeoBundle 'junegunn/vim-oblique'
+
+" Required:
+call neobundle#end()
+
+" Required:
 filetype plugin indent on
+
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
+"End NeoBundle Scripts-------------------------
+
 syntax on
 
-" basic configuration
-set nocompatible
 set encoding=utf-8
 set showcmd
 set showmode
@@ -22,11 +75,13 @@ set tm=500
 set history=1000
 set si
 
-set statusline=%f\ %m\ %r
-
 " color & schema
-set background=dark
-colorscheme ir_black
+if has('gui_running')
+    set background=light
+else
+    set background=dark
+endif
+colors ir_black
 if &term =~ '256color'
     set t_ut=
 endif
@@ -57,7 +112,6 @@ set magic
 set nolist
 set lcs=tab:▒░,trail:░,extends:»,precedes:«,eol:¬
 set listchars=tab:▒░,trail:░,extends:»,precedes:«,eol:¬
-set showbreak=↪
 nmap <leader>l :set list!<CR>
 set autowrite
 set autoread
@@ -106,6 +160,11 @@ vnoremap <F1> <ESC>
 " jj acts as ESC
 imap jj <ESC>
 
+" folding
+set foldenable
+set foldnestmax=0
+set foldmethod=syntax
+
 " split window navigation
 nnoremap <leader>w <C-w>v<C-w>l
 nnoremap <C-h> <C-w>h
@@ -116,24 +175,18 @@ set splitbelow
 set splitright
 
 " customized keys
-nnoremap <silent><CR> :nohlsearch<CR>
+nnoremap <CR> :nohlsearch<CR>
 noremap <M-TAB> :bnext<CR>
 noremap <M-S-TAB> :bprevious<CR>
 
-nnoremap ww<CR> <ESC>:w<CR>
-map <Leader>a ggVG
-
 map Q gq
 
-" folding
-set foldenable
-set foldmethod=indent
-set foldlevelstart=1
-set foldnestmax=2
+nnoremap <leader>a gg<s-v>G
 
 " generate ctag file
 map <leader>ct :!/usr/local/bin/ctags -R .<CR>
 
+" use ag search
 nnoremap <D-f> :Ag<space>
 
 " highlight if column exceeds the specified number
@@ -146,30 +199,31 @@ cnoremap %% <C-R>=expand('%:h').'/'<CR>
 " group of auto command
 augroup vimrEx
     autocmd BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \    exe "normal! g`\"" |
+        \ if line("'\"") > 0 &&line("'\"") <= line("$") |
+        \   exe "normal g`\"" |
         \ endif
-    autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
+
     autocmd BufWritePre * :%s/\s\+$//e
+    autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
 augroup END
 
-" plugins
-
+" CtrlP
+map <C-p> :<C-U>CtrlP<CR>
+map <D-p> :<C-U>CtrlP<CR>
 set suffixes+=.bak,.exe,.o,.obj,.swp,.ncb,.opt,.pdb,.class,.pyc
-set wildignore+=*/tmp/*,*/target/*,git,*.so,*.swp,*.zip,*.pyc,
-set wildignore+=*.o,*.a,*.class,*.gem,.svn,*.gar.gz,*.tar.bz2
-let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/](node_modules|target|dist)|(\.(git|hg|svn))$',
-    \ 'file': '\v\.(exe|so|dll|pyc|pyo|o|a|class)$',
-    \ }
+set wildignore+=*/tmp/*,*/target/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class
 let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-let g:ctrlp_max_files = 0
+let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_lazy_update = 350
 let g:ctrlp_clear_cache_on_exit = 0
-if executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor\ --column
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-    let g:ctrlp_use_caching = 0
+let g:ctrlp_max_files = 0
+let g:ctrlp_custom_ignore = {
+    \ 'dir': '\v[\/](\~|\.git|\.hg|\.svn|\target)$',
+    \ 'file': '\v\*.(pyc|so|dll|class|exe)$',
+    \ }
+if executable("ag")
+    set grepprg=ag\ --nogroup\ --nocolor
+    let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden -g ""'
 endif
 
 " rainbow parenthese
@@ -200,15 +254,7 @@ au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 au Syntax * RainbowParenthesesLoadChevrons
 
-" Vim session
-let g:session_autosave = 'yes'
-let g:session_autoload = 'no'
-
-let g:SuperTabDefaultCompletionType = "context"
-
-"syntastic
-let g:syntastic_enable_signs = 1
-let g:syntastic_quiet_warnings = 0
+" syntastic
 let g:syntastic_check_on_open = 1
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_style_error_symbol = 's✗'
@@ -216,8 +262,15 @@ let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_warning_symbol = 's⚠'
 let g:syntastic_python_checkers=['flake8']
 let g:syntastic_java_checkers=['checkstyle']
-let g:syntastic_java_checkstyle_classpath = "/Users/chang/Libs/checkstyle/checkstyle-5.7-all.jar"
-let g:syntastic_java_checkstyle_conf_file = "/Users/chang/Libs/checkstyle/sun_checks.xml"
+let g:syntastic_java_checkstyle_classpath = "/Users/chang.wang/Libs/checkstyle/checkstyle-5.7-all.jar"
+let g:syntastic_java_checkstyle_conf_file = "/Users/chang.wang/Libs/checkstyle/sun_checks.xml"
+
+" resolve supertab snipmate conflict
+let g:SuperTabDefaultCompletionType = "context"
+
+" tagbar
+map <leader>t :tag<space>
+nnoremap <silent> <F8> :TagbarToggle<CR>
 
 " Neocomplete
 let g:acp_enableAtStartup = 0
@@ -251,28 +304,13 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-" tagbar
-nnoremap <silent> <F8> :TagbarToggle<CR>
-
 " vim-go
-let g:go_disable_autoinstall = 1
 let g:go_fmt_fail_silently = 1
-
-" vim-airline
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-let g:airline_powerline_fonts = 1
-let g:airline_enable_branch = 1
-
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
+let g:go_disable_autoinstall = 1
 
 " smooth scroll
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 25, 3)<CR>
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 17, 3)<CR>
+
+" vim oblique
+let g:oblique#clear_highlight = 0
