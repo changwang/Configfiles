@@ -1,9 +1,5 @@
 " general config
 let mapleader=","
-let g:mapleader=","
-
-" basic configuration
-" set nocompatible
 
 "NeoBundle Scripts-----------------------------
 if has('vim_starting')
@@ -21,7 +17,9 @@ call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " My Bundles here:
-NeoBundle 'kien/ctrlp.vim'
+"NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'ctrlpvim/ctrlp.vim'
+NeoBundle 'JazzCore/ctrlp-cmatcher'
 NeoBundle 'flazz/vim-colorschemes'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'jiangmiao/auto-pairs'
@@ -41,16 +39,21 @@ NeoBundle 'terryma/vim-smooth-scroll'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/vimproc.vim', {
       \ 'build' : {
-      \     'windows' : 'tools\\update-dll-mingw',
-      \     'cygwin' : 'make -f make_cygwin.mak',
       \     'mac' : 'make -f make_mac.mak',
       \     'unix' : 'make -f make_unix.mak',
       \    },
       \ }
 NeoBundle 'junegunn/vim-pseudocl'
 NeoBundle 'junegunn/vim-oblique'
+NeoBundle 'bronson/vim-trailing-whitespace'
+NeoBundle 'sjl/gundo.vim'
+NeoBundle 'junegunn/goyo.vim'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'klen/python-mode'
 
 " Required:
 call neobundle#end()
@@ -66,6 +69,8 @@ NeoBundleCheck
 syntax on
 
 set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
 set showcmd
 set showmode
 set laststatus=2
@@ -74,18 +79,19 @@ set cmdheight=1
 set tm=500
 set history=1000
 set si
+set ttyfast
 
 " color & schema
+if &term =~ '256color'
+    set t_ut=
+endif
+set t_Co=256
 if has('gui_running')
     set background=light
 else
     set background=dark
 endif
 colors ir_black
-if &term =~ '256color'
-    set t_ut=
-endif
-set t_Co=256
 
 " indentation
 set autoindent
@@ -102,7 +108,6 @@ set backspace=indent,eol,start
 set nowrap
 set number
 set ruler
-set cursorline
 set nostartofline
 set hidden
 set wildmenu
@@ -116,6 +121,7 @@ nmap <leader>l :set list!<CR>
 set autowrite
 set autoread
 set wrap
+set fileformats=unix,dos,mac
 
 " backup (I don't need them)
 set nobackup
@@ -210,16 +216,16 @@ augroup END
 " CtrlP
 map <C-p> :<C-U>CtrlP<CR>
 map <D-p> :<C-U>CtrlP<CR>
-set suffixes+=.bak,.exe,.o,.obj,.swp,.ncb,.opt,.pdb,.class,.pyc
-set wildignore+=*/tmp/*,*/target/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class
-let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+set suffixes+=.bak,.exe,.o,.obj,.swp,.ncb,.opt,.pdb,.class,.pyc,pyo
+set wildignore+=*/tmp/*,*/target/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class,*.pyo
+" let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+let g:ctrlp_match_func = { 'match': 'matcher#cmatch' }
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_lazy_update = 350
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_max_files = 0
+let g:ctrlp_max_files = 1000
+let g:ctrlp_extensions = ['funky']
 let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/](\~|\.git|\.hg|\.svn|\target)$',
-    \ 'file': '\v\*.(pyc|so|dll|class|exe)$',
+    \ 'dir': '\v[\/]\.(git|hg|svn|target)$',
+    \ 'file': '\v\*.(pyc|pyo|so|dll|class|exe)$',
     \ }
 if executable("ag")
     set grepprg=ag\ --nogroup\ --nocolor
@@ -262,8 +268,8 @@ let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_warning_symbol = 's⚠'
 let g:syntastic_python_checkers=['flake8']
 let g:syntastic_java_checkers=['checkstyle']
-let g:syntastic_java_checkstyle_classpath = "/Users/chang.wang/Libs/checkstyle/checkstyle-5.7-all.jar"
-let g:syntastic_java_checkstyle_conf_file = "/Users/chang.wang/Libs/checkstyle/sun_checks.xml"
+let g:syntastic_java_checkstyle_classpath = "/checkstyle/checkstyle-6.1-all.jar"
+let g:syntastic_java_checkstyle_conf_file = "/checkstyle/sun_checks.xml"
 
 " resolve supertab snipmate conflict
 let g:SuperTabDefaultCompletionType = "context"
@@ -271,6 +277,7 @@ let g:SuperTabDefaultCompletionType = "context"
 " tagbar
 map <leader>t :tag<space>
 nnoremap <silent> <F8> :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
 
 " Neocomplete
 let g:acp_enableAtStartup = 0
@@ -292,7 +299,7 @@ function! s:my_cr_function()
     return neocomplete#close_popup() . "\<CR>"
 endfunction
 
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><C-y> neocomplete#close_popup()
@@ -308,9 +315,69 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 let g:go_fmt_fail_silently = 1
 let g:go_disable_autoinstall = 1
 
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
+
 " smooth scroll
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 25, 3)<CR>
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 17, 3)<CR>
 
 " vim oblique
-let g:oblique#clear_highlight = 0
+" let g:oblique#clear_highlight = 0
+
+" nerd commenter
+if has("gui_running")
+    map <D-/> <Leader>c<Space>
+else
+    map <C-/> <Leader>c<Space>
+endif
+
+" Gundo
+let g:gundo_width = 70
+let g:gundo_preview_height = 30
+let g:gundo_right = 1
+let g:gundo_close_on_revert = 1
+nnoremap <F5> :GundoToggle<CR>
+
+" Goyo
+nnoremap <leader>z :Goyo<CR>
+let g:goyo_width = 100
+let g:goyo_margin_top = 2
+let g:goyo_margin_bottom = 2
+let g:goyo_linenr = 1
+
+" NeoSnippet
+imap <D-k> <Plug>(neosnippet_expand_or_jump)
+smap <D-k> <Plug>(neosnippet_expand_or_jump)
+xmap <D-k> <Plug>(neosnippet_expand_target)
+
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+if has('conceal')
+    set conceallevel=2 concealcursor=i
+endif
