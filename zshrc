@@ -33,6 +33,11 @@ alias mongod="mongod --dbpath=/Users/chang/Libs/mongodb/data"
 unsetopt correct
 unsetopt correct_all
 
+tmux attach &> /dev/null
+if [[ ! $TERM =~ screen ]]; then
+    exec tmux
+fi
+
 PATH=$HOME/.rvm/bin:$PATH # Add RVM to PATH for scripting
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
