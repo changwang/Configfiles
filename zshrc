@@ -37,6 +37,7 @@ tmux attach &> /dev/null
 if [[ ! $TERM =~ screen ]]; then
     exec tmux
 fi
+# [ -z "$TMUX" ] && export TERM=xterm-256color && exec tmux
 
 PATH=$HOME/.rvm/bin:$PATH # Add RVM to PATH for scripting
 
