@@ -1,70 +1,52 @@
 " general config
 let mapleader=","
 
-"NeoBundle Scripts-----------------------------
-if has('vim_starting')
-  set nocompatible               " Be iMproved
+set nocompatible               " Be iMproved
 
-  " Required:
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-
-" Required:
-call neobundle#begin(expand('~/.vim/bundle'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
+call plug#begin(expand('~/.vim/bundle'))
 
 " My Bundles here:
-"NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'ctrlpvim/ctrlp.vim'
-NeoBundle 'JazzCore/ctrlp-cmatcher'
-NeoBundle 'flazz/vim-colorschemes'
-NeoBundle 'rking/ag.vim'
-NeoBundle 'jiangmiao/auto-pairs'
-NeoBundle 'FelikZ/ctrlp-py-matcher'
-NeoBundle 'tmhedberg/matchit'
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'kien/rainbow_parentheses.vim'
-NeoBundle 'ervandew/supertab'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'fatih/vim-go'
-NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'mhinz/vim-signify'
-NeoBundle 'terryma/vim-smooth-scroll'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-unimpaired'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'Shougo/vimproc.vim', {
+Plug 'ryanoasis/vim-devicons'
+Plug 'scrooloose/nerdtree'
+Plug 'itchyny/lightline.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'rking/ag.vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tmhedberg/matchit'
+Plug 'scrooloose/nerdcommenter'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'ervandew/supertab'
+Plug 'scrooloose/syntastic'
+Plug 'majutsushi/tagbar'
+Plug 'fatih/vim-go'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'airblade/vim-gitgutter'
+Plug 'terryma/vim-smooth-scroll'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'Shougo/vimproc.vim', {
       \ 'build' : {
       \     'mac' : 'make -f make_mac.mak',
       \     'unix' : 'make -f make_unix.mak',
       \    },
       \ }
-NeoBundle 'junegunn/vim-pseudocl'
-NeoBundle 'junegunn/vim-oblique'
-NeoBundle 'bronson/vim-trailing-whitespace'
-NeoBundle 'sjl/gundo.vim'
-NeoBundle 'junegunn/goyo.vim'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'klen/python-mode'
+Plug 'pgdouyon/vim-evanesco'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'sjl/gundo.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'mattn/emmet-vim'
+Plug 'xolox/vim-easytags'
+Plug 'xolox/vim-misc'
+"Plug 'vim-ctrlspace/vim-ctrlspace'
+Plug 'metakirby5/codi.vim'
+Plug 'NLKNguyen/papercolor-theme'
 
 " Required:
-call neobundle#end()
+call plug#end()
 
 " Required:
 filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-"End NeoBundle Scripts-------------------------
 
 syntax on
 
@@ -73,11 +55,12 @@ set fileencoding=utf-8
 set fileencodings=utf-8
 set showcmd
 set showmode
+set showmatch
 set laststatus=2
 set scrolloff=5
 set cmdheight=1
 set tm=500
-set history=1000
+set history=500
 set si
 set ttyfast
 
@@ -91,7 +74,7 @@ if has('gui_running')
 else
     set background=dark
 endif
-colors ir_black
+colors PaperColor
 
 " indentation
 set autoindent
@@ -112,15 +95,14 @@ set nostartofline
 set hidden
 set wildmenu
 set wildmode=full
+set lazyredraw
 set textwidth=100
 set magic
 set nolist
 set lcs=tab:▒░,trail:░,extends:»,precedes:«,eol:¬
-set listchars=tab:▒░,trail:░,extends:»,precedes:«,eol:¬
 nmap <leader>l :set list!<CR>
 set autowrite
 set autoread
-set wrap
 set fileformats=unix,dos,mac
 
 " backup (I don't need them)
@@ -144,6 +126,9 @@ set noerrorbells
 set novisualbell
 set vb t_vb=
 
+set lbr
+set tw=500
+
 " default shell
 set shell=/usr/local/bin/zsh
 
@@ -164,7 +149,7 @@ nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
 " jj acts as ESC
-imap jj <ESC>
+imap jk <ESC>
 
 " folding
 set foldenable
@@ -218,8 +203,6 @@ map <C-p> :<C-U>CtrlP<CR>
 map <D-p> :<C-U>CtrlP<CR>
 set suffixes+=.bak,.exe,.o,.obj,.swp,.ncb,.opt,.pdb,.class,.pyc,pyo
 set wildignore+=*/tmp/*,*/target/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class,*.pyo
-" let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-let g:ctrlp_match_func = { 'match': 'matcher#cmatch' }
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_max_files = 1000
 let g:ctrlp_extensions = ['funky']
@@ -243,7 +226,6 @@ let g:rbpt_colorpairs = [
     \ ['darkmagenta', 'DarkOrchid3'],
     \ ['brown',       'firebrick3'],
     \ ['gray',        'RoyalBlue3'],
-    \ ['black',       'SeaGreen3'],
     \ ['darkmagenta', 'DarkOrchid3'],
     \ ['Darkblue',    'firebrick3'],
     \ ['darkgreen',   'RoyalBlue3'],
@@ -262,14 +244,12 @@ au Syntax * RainbowParenthesesLoadChevrons
 
 " syntastic
 let g:syntastic_check_on_open = 1
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_style_error_symbol = 's✗'
-let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_style_warning_symbol = 's⚠'
+let g:syntastic_error_symbol = '❌'
+let g:syntastic_style_error_symbol = '⁉️'
+let g:syntastic_warning_symbol = '⚠️'
+let g:syntastic_style_warning_symbol = '💩'
 let g:syntastic_python_checkers=['flake8']
 let g:syntastic_java_checkers=['checkstyle']
-let g:syntastic_java_checkstyle_classpath = "/checkstyle/checkstyle-6.1-all.jar"
-let g:syntastic_java_checkstyle_conf_file = "/checkstyle/sun_checks.xml"
 
 " resolve supertab snipmate conflict
 let g:SuperTabDefaultCompletionType = "context"
@@ -279,41 +259,15 @@ map <leader>t :tag<space>
 nnoremap <silent> <F8> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
-" Neocomplete
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#max_list = 20
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-inoremap <expr><C-g> neocomplete#undo_completion()
-inoremap <expr><C-l> neocomplete#complete_common_string()
-
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    return neocomplete#close_popup() . "\<CR>"
-endfunction
-
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y> neocomplete#close_popup()
-inoremap <expr><C-e> neocomplete#cancel_popup()
-
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
 " vim-go
 let g:go_fmt_fail_silently = 1
 let g:go_disable_autoinstall = 1
+let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave = 1
+
+let g:go_highlight_functions = 1
+" let g:go_highlight_methods = 1
+" let g:go_highlight_structs = 1
 
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
@@ -366,18 +320,98 @@ nnoremap <F5> :GundoToggle<CR>
 
 " Goyo
 nnoremap <leader>z :Goyo<CR>
-let g:goyo_width = 100
+let g:goyo_width = 120
 let g:goyo_margin_top = 2
 let g:goyo_margin_bottom = 2
 let g:goyo_linenr = 1
 
-" NeoSnippet
-imap <D-k> <Plug>(neosnippet_expand_or_jump)
-smap <D-k> <Plug>(neosnippet_expand_or_jump)
-xmap <D-k> <Plug>(neosnippet_expand_target)
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+let g:limelight_default_coefficient = 0.7
+let g:limelight_paragraph_span = 1
 
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-if has('conceal')
-    set conceallevel=2 concealcursor=i
-endif
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
+let g:lightline = {
+    \ 'colorscheme': 'PaperColor',
+    \ 'component_function': {
+    \  'filetype': 'WebIconType',
+    \  'fileformat': 'WebIconFormat',
+    \ },
+    \ 'separator': { 'left': '', 'right': '' },
+    \ 'subseparator': { 'left': '', 'right': '' }
+    \ }
+
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+
+function! WebIconType()
+    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! WebIconFormat()
+    return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
+
+map <leader>n :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.pyc$', '\~$']
+
+let g:easytags_async = 1
+
+nnoremap <Leader>fu :CtrlPFunky<Cr>
+nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+
+"if has("gui_running")
+    " Settings for MacVim and Inconsolata font
+"    let g:CtrlSpaceSymbols = { "File": "◯", "CTab": "▣", "Tabs": "▢" }
+"endif
+"if executable("ag")
+"    let g:CtrlSpaceGlobCommand = 'ag -l --nocolor -g ""'
+"endif
+"let g:CtrlSpaceSearchTiming = 500
+"nnoremap <silent><C-p> :CtrlSpace 0<CR>
+
+let g:indentLine_color_term = 239
+let g:indentLine_color_gui = '#A4E57E'
+
+let g:codi#width = 100
+let g:codi#rightalign = 0
+
+let macvim_skip_colorscheme=1
+
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+let g:NERDTreeHighlightFolders = 1
+let g:NERDTreeHighlightFoldersFullName = 1
+let s:brown = "905532"
+let s:aqua =  "3AFFDB"
+let s:blue = "689FB6"
+let s:darkBlue = "44788E"
+let s:purple = "834F79"
+let s:lightPurple = "834F79"
+let s:red = "AE403F"
+let s:beige = "F5C06F"
+let s:yellow = "F09F17"
+let s:orange = "D4843E"
+let s:darkOrange = "F16529"
+let s:pink = "CB6F6F"
+let s:salmon = "EE6E73"
+let s:green = "8FAA54"
+let s:lightGreen = "31B53E"
+let s:white = "FFFFFF"
+let s:rspec_red = 'FE405F'
+let s:git_orange = 'F54D27'
+
+let g:NERDTreeExtensionHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css files to blue
+
+let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
