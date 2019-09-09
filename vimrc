@@ -6,17 +6,14 @@ set nocompatible               " Be iMproved
 call plug#begin(expand('~/.vim/bundle'))
 
 " My Bundles here:
+Plug 'dense-analysis/ale'
 Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'itchyny/lightline.vim'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rking/ag.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tmhedberg/matchit'
-Plug 'scrooloose/nerdcommenter'
 Plug 'kien/rainbow_parentheses.vim'
-Plug 'ervandew/supertab'
-Plug 'scrooloose/syntastic'
 Plug 'majutsushi/tagbar'
 Plug 'fatih/vim-go'
 Plug 'terryma/vim-multiple-cursors'
@@ -26,21 +23,20 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 Plug 'Shougo/vimproc.vim', {
       \ 'build' : {
-      \     'mac' : 'make -f make_mac.mak',
+      \     'mac' : 'make',
       \     'unix' : 'make -f make_unix.mak',
       \    },
       \ }
-Plug 'pgdouyon/vim-evanesco'
-Plug 'bronson/vim-trailing-whitespace'
 Plug 'sjl/gundo.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'mattn/emmet-vim'
 Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
-"Plug 'vim-ctrlspace/vim-ctrlspace'
-Plug 'metakirby5/codi.vim'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'Yggdroot/indentLine'
 
 " Required:
 call plug#end()
@@ -63,6 +59,9 @@ set tm=500
 set history=500
 set si
 set ttyfast
+set guicursor=
+set guioptions-=e
+set guifont=FuraCode\ Nerd\ Font\ Mono:h14
 
 " color & schema
 if &term =~ '256color'
@@ -198,22 +197,35 @@ augroup vimrEx
     autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
 augroup END
 
-" CtrlP
-map <C-p> :<C-U>CtrlP<CR>
-map <D-p> :<C-U>CtrlP<CR>
-set suffixes+=.bak,.exe,.o,.obj,.swp,.ncb,.opt,.pdb,.class,.pyc,pyo
-set wildignore+=*/tmp/*,*/target/*,*.so,*.swp,*.zip,*.pyc,*.o,*.a,*.class,*.pyo
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_max_files = 1000
-let g:ctrlp_extensions = ['funky']
-let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/]\.(git|hg|svn|target)$',
-    \ 'file': '\v\*.(pyc|pyo|so|dll|class|exe)$',
-    \ }
-if executable("ag")
-    set grepprg=ag\ --nogroup\ --nocolor
-    let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden -g ""'
-endif
+nnoremap <C-p> :FZF<CR>
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+let g:fzf_layout = { 'down': '~40%' }
+
+let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_layout = { 'window': '-tabnew' }
+let g:fzf_layout = { 'window': '10new' }
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " rainbow parenthese
 let g:rbpt_colorpairs = [
@@ -241,18 +253,6 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 au Syntax * RainbowParenthesesLoadChevrons
-
-" syntastic
-let g:syntastic_check_on_open = 1
-let g:syntastic_error_symbol = '❌'
-let g:syntastic_style_error_symbol = '⁉️'
-let g:syntastic_warning_symbol = '⚠️'
-let g:syntastic_style_warning_symbol = '💩'
-let g:syntastic_python_checkers=['flake8']
-let g:syntastic_java_checkers=['checkstyle']
-
-" resolve supertab snipmate conflict
-let g:SuperTabDefaultCompletionType = "context"
 
 " tagbar
 map <leader>t :tag<space>
@@ -301,9 +301,6 @@ let g:tagbar_type_go = {
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 25, 3)<CR>
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 17, 3)<CR>
 
-" vim oblique
-" let g:oblique#clear_highlight = 0
-
 " nerd commenter
 if has("gui_running")
     map <D-/> <Leader>c<Space>
@@ -336,21 +333,24 @@ autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
 let g:lightline = {
-    \ 'colorscheme': 'PaperColor',
-    \ 'component_function': {
-    \  'filetype': 'WebIconType',
-    \  'fileformat': 'WebIconFormat',
+    \ 'colorscheme': 'wombat',
+    \ 'active': {
+    \  'left': [ [ 'mode', 'paste' ],
+    \            [ 'gitbranch', 'readonly', 'filename', 'modified' ]
+    \  ]
     \ },
-    \ 'separator': { 'left': '', 'right': '' },
-    \ 'subseparator': { 'left': '', 'right': '' }
+    \ 'separator': { 'left': '|', 'right': '|' },
+    \ 'subseparator': { 'left': '|', 'right': '|' }
     \ }
 
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
 let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
+let g:webdevicons_enable_nerdtree = 1
+let g:webdevicons_enable = 1
 let g:webdevicons_conceal_nerdtree_brackets = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+"let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+"let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
 
 function! WebIconType()
     return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
@@ -362,24 +362,16 @@ endfunction
 
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeIgnore = ['\.pyc$', '\~$']
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
 
 let g:easytags_async = 1
 
 nnoremap <Leader>fu :CtrlPFunky<Cr>
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
-"if has("gui_running")
-    " Settings for MacVim and Inconsolata font
-"    let g:CtrlSpaceSymbols = { "File": "◯", "CTab": "▣", "Tabs": "▢" }
-"endif
-"if executable("ag")
-"    let g:CtrlSpaceGlobCommand = 'ag -l --nocolor -g ""'
-"endif
-"let g:CtrlSpaceSearchTiming = 500
-"nnoremap <silent><C-p> :CtrlSpace 0<CR>
-
+let g:indentLine_char = '┊'
 let g:indentLine_color_term = 239
-let g:indentLine_color_gui = '#A4E57E'
 
 let g:codi#width = 100
 let g:codi#rightalign = 0
@@ -415,3 +407,7 @@ let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css fi
 
 let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
 let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
+
+let g:lightline = {
+    \ 'colorscheme': 'PaperColor',
+    \ }
