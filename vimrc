@@ -6,8 +6,8 @@ set nocompatible               " Be iMproved
 call plug#begin(expand('~/.vim/bundle'))
 
 " My Bundles here:
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
-Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'itchyny/lightline.vim'
 Plug 'rking/ag.vim'
@@ -37,6 +37,8 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/indentLine'
+Plug 'psf/black'
+Plug 'ryanoasis/vim-devicons'
 
 " Required:
 call plug#end()
@@ -61,7 +63,9 @@ set si
 set ttyfast
 set guicursor=
 set guioptions-=e
-set guifont=FuraCode\ Nerd\ Font\ Mono:h14
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
 
 " color & schema
 if &term =~ '256color'
@@ -411,3 +415,48 @@ let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the c
 let g:lightline = {
     \ 'colorscheme': 'PaperColor',
     \ }
+
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+
+autocmd BufWritePre *.py execute ':Black'
+
+inoremap <silent><expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1] =~# '\s'
+endfunction
+
+inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-refrences)
+
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
+endfunction
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+nmap <leader>rn <Plug>(coc-rename)
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
+
+xmap <silent> <C-d> <Plug>(coc-range-select)
+nmap <silent> <C-d> <Plug>(coc-range-select)
