@@ -13,31 +13,22 @@ Plug 'itchyny/lightline.vim'
 Plug 'rking/ag.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tmhedberg/matchit'
-Plug 'kien/rainbow_parentheses.vim'
+Plug 'luochen1990/rainbow'
 Plug 'majutsushi/tagbar'
-Plug 'fatih/vim-go'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'airblade/vim-gitgutter'
-Plug 'terryma/vim-smooth-scroll'
+Plug 'yuttie/comfortable-motion.vim'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'Shougo/vimproc.vim', {
-      \ 'build' : {
-      \     'mac' : 'make',
-      \     'unix' : 'make -f make_unix.mak',
-      \    },
-      \ }
-Plug 'sjl/gundo.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'mattn/emmet-vim'
-Plug 'xolox/vim-easytags'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'skywind3000/gutentags_plus'
 Plug 'xolox/vim-misc'
-Plug 'NLKNguyen/papercolor-theme'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'psf/black'
+Plug 'drewtempelmeyer/palenight.vim'
 Plug 'ryanoasis/vim-devicons'
 
 " Required:
@@ -66,6 +57,7 @@ set guioptions-=e
 set updatetime=300
 set shortmess+=c
 set signcolumn=yes
+set mouse=a
 
 " color & schema
 if &term =~ '256color'
@@ -77,7 +69,6 @@ if has('gui_running')
 else
     set background=dark
 endif
-colors PaperColor
 
 " indentation
 set autoindent
@@ -132,8 +123,9 @@ set vb t_vb=
 set lbr
 set tw=500
 
-" default shell
-set shell=/usr/local/bin/zsh
+set spelllang=en
+set termguicolors
+colorscheme palenight
 
 " disable arrow keys
 noremap <Up> <NOP>
@@ -157,7 +149,8 @@ imap jk <ESC>
 " folding
 set foldenable
 set foldnestmax=0
-set foldmethod=syntax
+set foldmethod=indent
+set foldlevel=99
 
 " split window navigation
 nnoremap <leader>w <C-w>v<C-w>l
@@ -177,15 +170,16 @@ map Q gq
 
 nnoremap <leader>a gg<s-v>G
 
-" generate ctag file
-map <leader>ct :!/usr/local/bin/ctags -R .<CR>
-
 " use ag search
 nnoremap <D-f> :Ag<space>
 
 " highlight if column exceeds the specified number
 highlight ColorColumn ctermbg=magenta guibg=magenta
 call matchadd('ColorColumn', '\%101v', 100)
+
+if (has('nvim'))
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
 
 " translate %% to file path
 cnoremap %% <C-R>=expand('%:h').'/'<CR>
@@ -206,14 +200,10 @@ let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
-
 let g:fzf_layout = { 'down': '~40%' }
-
 let g:fzf_layout = { 'window': 'enew' }
 let g:fzf_layout = { 'window': '-tabnew' }
 let g:fzf_layout = { 'window': '10new' }
-
-" Customize fzf colors to match your color scheme
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -228,96 +218,23 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
-
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " rainbow parenthese
-let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
-let g:rbpt_max = 16
-let g:rbpt_loadcmd_toggle = 0
-
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
-au Syntax * RainbowParenthesesLoadChevrons
+let g:rainbow_active = 1
 
 " tagbar
 map <leader>t :tag<space>
 nnoremap <silent> <F8> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
-" vim-go
-let g:go_fmt_fail_silently = 1
-let g:go_disable_autoinstall = 1
-let g:go_fmt_command = "goimports"
-let g:go_fmt_autosave = 1
-
-let g:go_highlight_functions = 1
-" let g:go_highlight_methods = 1
-" let g:go_highlight_structs = 1
-
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-
 " smooth scroll
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 25, 3)<CR>
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 17, 3)<CR>
-
-" nerd commenter
-if has("gui_running")
-    map <D-/> <Leader>c<Space>
-else
-    map <C-/> <Leader>c<Space>
-endif
-
-" Gundo
-let g:gundo_width = 70
-let g:gundo_preview_height = 30
-let g:gundo_right = 1
-let g:gundo_close_on_revert = 1
-nnoremap <F5> :GundoToggle<CR>
+let g:comfortable_motion_scroll_down_key = "j"
+let g:comfortable_motion_scroll_up_key = "k"
+let g:comfortable_motion_friction = 200.0
+let g:comfortable_motion_air_drag = 2.0
+noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(40)<CR>
+noremap <silent> <ScrollWheelUp> :call comfortable_motion#flick(-40)<CR>
 
 " Goyo
 nnoremap <leader>z :Goyo<CR>
@@ -337,7 +254,7 @@ autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
 let g:lightline = {
-    \ 'colorscheme': 'wombat',
+    \ 'colorscheme': 'palenight',
     \ 'active': {
     \  'left': [ [ 'mode', 'paste' ],
     \            [ 'gitbranch', 'readonly', 'filename', 'modified' ]
@@ -353,8 +270,8 @@ let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
 let g:webdevicons_enable_nerdtree = 1
 let g:webdevicons_enable = 1
 let g:webdevicons_conceal_nerdtree_brackets = 1
-"let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-"let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
 
 function! WebIconType()
     return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
@@ -369,18 +286,8 @@ let NERDTreeIgnore = ['\.pyc$', '\~$']
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 
-let g:easytags_async = 1
-
-nnoremap <Leader>fu :CtrlPFunky<Cr>
-nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-
 let g:indentLine_char = '┊'
 let g:indentLine_color_term = 239
-
-let g:codi#width = 100
-let g:codi#rightalign = 0
-
-let macvim_skip_colorscheme=1
 
 let g:NERDTreeFileExtensionHighlightFullName = 1
 let g:NERDTreeExactMatchHighlightFullName = 1
@@ -411,10 +318,6 @@ let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css fi
 
 let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
 let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
-
-let g:lightline = {
-    \ 'colorscheme': 'PaperColor',
-    \ }
 
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
@@ -458,5 +361,9 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f <Plug>(coc-format-selected)
 nmap <leader>f <Plug>(coc-format-selected)
 
-xmap <silent> <C-d> <Plug>(coc-range-select)
-nmap <silent> <C-d> <Plug>(coc-range-select)
+set statusline+=%{gutentags#statusline()}
+let g:gutentags_project_root = ['Makefile']
+let g:gutentags_modules = ['ctags']
+let g:gutentags_project_root = ['.root']
+let g:gutentags_cache_dir = expand('~/.cache/tags')
+let g:gutentags_plus_switch = 1
