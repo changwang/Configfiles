@@ -10,7 +10,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 Plug 'scrooloose/nerdtree'
 Plug 'itchyny/lightline.vim'
-Plug 'rking/ag.vim'
+Plug 'gabesoft/vim-ags'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tmhedberg/matchit'
 Plug 'luochen1990/rainbow'
@@ -28,8 +28,12 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'psf/black'
-Plug 'drewtempelmeyer/palenight.vim'
 Plug 'ryanoasis/vim-devicons'
+Plug 'jacoborus/tender.vim'
+Plug 'sstallion/vim-wtf'
+Plug 'rust-lang/rust.vim'
+Plug 'easymotion/vim-easymotion'
+Plug 'pbogut/fzf-mru.vim'
 
 " Required:
 call plug#end()
@@ -53,6 +57,7 @@ set history=500
 set si
 set ttyfast
 set guicursor=
+set cursorline
 set guioptions-=e
 set updatetime=300
 set shortmess+=c
@@ -125,7 +130,7 @@ set tw=500
 
 set spelllang=en
 set termguicolors
-colorscheme palenight
+colorscheme wtf
 
 " disable arrow keys
 noremap <Up> <NOP>
@@ -153,7 +158,7 @@ set foldmethod=indent
 set foldlevel=99
 
 " split window navigation
-nnoremap <leader>w <C-w>v<C-w>l
+"nnoremap <leader>w <C-w>v<C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -195,15 +200,22 @@ augroup vimrEx
     autocmd BufEnter * let &titlestring = ' ' . expand("%:t")
 augroup END
 
-nnoremap <C-p> :FZF<CR>
+nnoremap <C-p> :Files<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>m :FZFMru<CR>
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
-let g:fzf_layout = { 'down': '~40%' }
-let g:fzf_layout = { 'window': 'enew' }
-let g:fzf_layout = { 'window': '-tabnew' }
-let g:fzf_layout = { 'window': '10new' }
+let g:fzf_layout = { 'window': {
+    \ 'width': 0.9,
+    \ 'height': 0.7,
+    \ 'highlight': 'Comment',
+    \ 'rounded': v:false }}
+"let g:fzf_layout = { 'down': '~40%' }
+"let g:fzf_layout = { 'window': 'enew' }
+"let g:fzf_layout = { 'window': '-tabnew' }
+"let g:fzf_layout = { 'window': '10new' }
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -254,7 +266,7 @@ autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
 let g:lightline = {
-    \ 'colorscheme': 'palenight',
+    \ 'colorscheme': 'tender',
     \ 'active': {
     \  'left': [ [ 'mode', 'paste' ],
     \            [ 'gitbranch', 'readonly', 'filename', 'modified' ]
@@ -358,8 +370,8 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 nmap <leader>rn <Plug>(coc-rename)
-xmap <leader>f <Plug>(coc-format-selected)
-nmap <leader>f <Plug>(coc-format-selected)
+"xmap <leader>f <Plug>(coc-format-selected)
+"nmap <leader>f <Plug>(coc-format-selected)
 
 set statusline+=%{gutentags#statusline()}
 let g:gutentags_project_root = ['Makefile']
@@ -367,3 +379,6 @@ let g:gutentags_modules = ['ctags']
 let g:gutentags_project_root = ['.root']
 let g:gutentags_cache_dir = expand('~/.cache/tags')
 let g:gutentags_plus_switch = 1
+
+" easy motion
+map <leader> <Plug>(easymotion-prefix)
