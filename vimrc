@@ -7,33 +7,30 @@ call plug#begin(expand('~/.vim/bundle'))
 
 " My Bundles here:
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'dense-analysis/ale'
 Plug 'scrooloose/nerdtree'
 Plug 'itchyny/lightline.vim'
 Plug 'gabesoft/vim-ags'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tmhedberg/matchit'
 Plug 'luochen1990/rainbow'
-Plug 'majutsushi/tagbar'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'mattn/emmet-vim'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'skywind3000/gutentags_plus'
-Plug 'xolox/vim-misc'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/indentLine'
-Plug 'psf/black'
+Plug 'psf/black', { 'tag': '19.10b0' }
 Plug 'ryanoasis/vim-devicons'
 Plug 'jacoborus/tender.vim'
 Plug 'sstallion/vim-wtf'
 Plug 'rust-lang/rust.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'pbogut/fzf-mru.vim'
+Plug 'liuchengxu/vista.vim'
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 " Required:
 call plug#end()
@@ -56,9 +53,7 @@ set tm=500
 set history=500
 set si
 set ttyfast
-set guicursor=
 set cursorline
-set guioptions-=e
 set updatetime=300
 set shortmess+=c
 set signcolumn=yes
@@ -69,11 +64,7 @@ if &term =~ '256color'
     set t_ut=
 endif
 set t_Co=256
-if has('gui_running')
-    set background=light
-else
-    set background=dark
-endif
+set background=dark
 
 " indentation
 set autoindent
@@ -158,7 +149,6 @@ set foldmethod=indent
 set foldlevel=99
 
 " split window navigation
-"nnoremap <leader>w <C-w>v<C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -207,15 +197,13 @@ let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
+let $FZF_DEFAULT_OPTS = '--layout=reverse'
 let g:fzf_layout = { 'window': {
     \ 'width': 0.9,
     \ 'height': 0.7,
     \ 'highlight': 'Comment',
     \ 'rounded': v:false }}
-"let g:fzf_layout = { 'down': '~40%' }
-"let g:fzf_layout = { 'window': 'enew' }
-"let g:fzf_layout = { 'window': '-tabnew' }
-"let g:fzf_layout = { 'window': '10new' }
+
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -234,11 +222,6 @@ let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " rainbow parenthese
 let g:rainbow_active = 1
-
-" tagbar
-map <leader>t :tag<space>
-nnoremap <silent> <F8> :TagbarToggle<CR>
-let g:tagbar_autofocus = 1
 
 " smooth scroll
 let g:comfortable_motion_scroll_down_key = "j"
@@ -265,15 +248,32 @@ let g:limelight_paragraph_span = 1
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
+" vista
+nnoremap <silent> <F8> :Vista!!<CR>
+nnoremap <silent> <F9> :Vista finder<CR>
+function! NearestMethodOrFunction() abort
+    return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+
+set statusline+=%{NearestMethodOrFunction()}
+autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+let g:vista_default_executive = 'ctags'
+let g:vista_fzf_preview = ['right:50%']
+let g:vista#renderer#enable_icon = 1
+
 let g:lightline = {
     \ 'colorscheme': 'tender',
     \ 'active': {
     \  'left': [ [ 'mode', 'paste' ],
-    \            [ 'gitbranch', 'readonly', 'filename', 'modified' ]
-    \  ]
+    \            [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+    \ },
+    \ 'component_function': {
+    \  'method': 'NearestMethodOrFunction'
     \ },
     \ 'separator': { 'left': '|', 'right': '|' },
-    \ 'subseparator': { 'left': '|', 'right': '|' }
+    \ 'subseparator': { 'left': '|', 'right': '|' },
     \ }
 
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
@@ -331,11 +331,6 @@ let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css fi
 let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
 let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
 
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '⚠'
-highlight ALEErrorSign ctermbg=NONE ctermfg=red
-highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
-
 autocmd BufWritePre *.py execute ':Black'
 
 inoremap <silent><expr> <TAB>
@@ -372,13 +367,6 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 "xmap <leader>f <Plug>(coc-format-selected)
 "nmap <leader>f <Plug>(coc-format-selected)
-
-set statusline+=%{gutentags#statusline()}
-let g:gutentags_project_root = ['Makefile']
-let g:gutentags_modules = ['ctags']
-let g:gutentags_project_root = ['.root']
-let g:gutentags_cache_dir = expand('~/.cache/tags')
-let g:gutentags_plus_switch = 1
 
 " easy motion
 map <leader> <Plug>(easymotion-prefix)
