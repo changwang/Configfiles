@@ -1,6 +1,5 @@
 [user]
 	name = Chang Wang
-	email = chang.wang@service-now.com
 
 [color]
     status = auto
@@ -10,7 +9,7 @@
 [core]
     autocrlf = input
 	safecrlf = true
-	editor = mvim -f --remote-tab-silent
+	editor = vim
 
 [alias]
     st = status
@@ -20,7 +19,7 @@
     df = diff
     lg = log -p
     hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-    
+
 [branch]
     autosetuprebase = always
 
@@ -31,8 +30,6 @@
 [mergetool]
 	keepBackup = true
 	prompt = false
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [diff]
 	tool = Kaleidoscope
 [difftool]
