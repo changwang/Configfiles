@@ -6,10 +6,7 @@ set nocompatible               " Be iMproved
 call plug#begin(expand('~/.vim/bundle'))
 
 " My Bundles here:
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'scrooloose/nerdtree'
 Plug 'itchyny/lightline.vim'
-Plug 'gabesoft/vim-ags'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tmhedberg/matchit'
 Plug 'luochen1990/rainbow'
@@ -19,18 +16,18 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'mattn/emmet-vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/indentLine'
-Plug 'psf/black', { 'tag': '19.10b0' }
-Plug 'ryanoasis/vim-devicons'
-Plug 'jacoborus/tender.vim'
+Plug 'psf/black'
 Plug 'sstallion/vim-wtf'
 Plug 'rust-lang/rust.vim'
-Plug 'easymotion/vim-easymotion'
-Plug 'pbogut/fzf-mru.vim'
 Plug 'liuchengxu/vista.vim'
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'ryanoasis/vim-devicons'
+Plug 'preservim/nerdtree'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/completion-nvim'
 
 " Required:
 call plug#end()
@@ -58,6 +55,7 @@ set updatetime=300
 set shortmess+=c
 set signcolumn=yes
 set mouse=a
+set guicursor=
 
 " color & schema
 if &term =~ '256color'
@@ -192,33 +190,6 @@ augroup END
 
 nnoremap <C-p> :Files<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>m :FZFMru<CR>
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
-let $FZF_DEFAULT_OPTS = '--layout=reverse'
-let g:fzf_layout = { 'window': {
-    \ 'width': 0.9,
-    \ 'height': 0.7,
-    \ 'highlight': 'Comment',
-    \ 'rounded': v:false }}
-
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " rainbow parenthese
 let g:rainbow_active = 1
@@ -249,7 +220,7 @@ autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
 " vista
-nnoremap <silent> <F8> :Vista!!<CR>
+nnoremap <silent> ; :Vista!!<CR>
 nnoremap <silent> <F9> :Vista finder<CR>
 function! NearestMethodOrFunction() abort
     return get(b:, 'vista_nearest_method_or_function', '')
@@ -260,11 +231,15 @@ autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista_default_executive = 'ctags'
-let g:vista_fzf_preview = ['right:50%']
 let g:vista#renderer#enable_icon = 1
+let g:vista_sidebar_width = 60
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "\uf71b",
+\  }
 
 let g:lightline = {
-    \ 'colorscheme': 'tender',
+    \ 'colorscheme': 'one',
     \ 'active': {
     \  'left': [ [ 'mode', 'paste' ],
     \            [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
@@ -276,36 +251,9 @@ let g:lightline = {
     \ 'subseparator': { 'left': '|', 'right': '|' },
     \ }
 
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
-let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
-let g:webdevicons_enable_nerdtree = 1
-let g:webdevicons_enable = 1
-let g:webdevicons_conceal_nerdtree_brackets = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
-
-function! WebIconType()
-    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
-endfunction
-
-function! WebIconFormat()
-    return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
-endfunction
-
-map <leader>n :NERDTreeToggle<CR>
-let NERDTreeIgnore = ['\.pyc$', '\~$']
-let g:NERDTreeDirArrowExpandable = '▸'
-let g:NERDTreeDirArrowCollapsible = '▾'
-
 let g:indentLine_char = '┊'
 let g:indentLine_color_term = 239
 
-let g:NERDTreeFileExtensionHighlightFullName = 1
-let g:NERDTreeExactMatchHighlightFullName = 1
-let g:NERDTreePatternMatchHighlightFullName = 1
-let g:NERDTreeHighlightFolders = 1
-let g:NERDTreeHighlightFoldersFullName = 1
 let s:brown = "905532"
 let s:aqua =  "3AFFDB"
 let s:blue = "689FB6"
@@ -325,48 +273,20 @@ let s:white = "FFFFFF"
 let s:rspec_red = 'FE405F'
 let s:git_orange = 'F54D27'
 
-let g:NERDTreeExtensionHighlightColor = {} " this line is needed to avoid error
-let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css files to blue
-
-let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
-let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
-
 autocmd BufWritePre *.py execute ':Black'
 
-inoremap <silent><expr> <TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+let g:asyncrun_open = 10
 
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1] =~# '\s'
-endfunction
+nnoremap <leader>n :NERDTreeToggle<CR>
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
 
-inoremap <silent><expr> <c-space> coc#refresh()
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-refrences)
-
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    else
-        call CocAction('doHover')
-    endif
-endfunction
-
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-nmap <leader>rn <Plug>(coc-rename)
-"xmap <leader>f <Plug>(coc-format-selected)
-"nmap <leader>f <Plug>(coc-format-selected)
-
-" easy motion
-map <leader> <Plug>(easymotion-prefix)
+sign define LspDiagnosticsSignError text=🔴
+sign define LspDiagnosticsSignWarning text=🟠
+sign define LspDiagnosticsSignInformation text=🔵
+sign define LspDiagnosticsSignHint text=🟢
