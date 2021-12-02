@@ -1,8 +1,69 @@
 local nvim_lsp = require('lspconfig')
+local cmp = require('cmp')
+local lspkind = require('lspkind')
+local tabnine = require('cmp_tabnine.config')
+tabnine:setup({
+    max_lines = 1000;
+    max_num_results = 20,
+    sort = true;
+    run_on_every_keystroke = true;
+    snippet_placeholder = '..';
+})
+
+lspkind.init({
+    with_text = true,
+    preset = 'codicons',
+})
+
+cmp.setup({
+    snippet = {
+      expand = function(args)
+        -- For `vsnip` user.
+        vim.fn["vsnip#anonymous"](args.body)
+      end,
+    },
+    mapping = {
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+      ["<Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+            cmp.select_next_item()
+        elseif vim.fn["vsnip#available"](1) == 1 then
+            feedkey("<Plug>(vsnip-expand-or-jump)", "")
+        else
+            fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+        end
+      end, { "i", "s" }),
+
+      ["<S-Tab>"] = cmp.mapping(function()
+        if cmp.visible() then
+            cmp.select_prev_item()
+        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+            feedkey("<Plug>(vsnip-jump-prev)", "")
+        end
+     end, { "i", "s" }),
+    },
+    sources = {
+      { name = 'cmp_tabnine' },
+      { name = 'nvim_lsp' },
+
+      -- For vsnip user.
+      { name = 'vsnip' },
+
+      { name = 'buffer' },
+    },
+    formatting = {
+        format = lspkind.cmp_format({width_text = false, maxwidth = 50})
+    }
+})
+
+
+-- Setup lspconfig.
 
 local on_attach = function(client, bufnr)
-    require('completion').on_attach()
-
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -32,17 +93,18 @@ local on_attach = function(client, bufnr)
     elseif client.resolved_capabilities.document_formatting then
         buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
     end
-    end
+end
 
-    local servers = {'pyright', 'rust_analyzer', 'clangd'}
-    for _, lsp in ipairs(servers) do
-        nvim_lsp[lsp].setup {
-            on_attach = on_attach,
-        }
-    end
-
-    require'nvim-treesitter.configs'.setup {
-        highlight = {
-            enable = true
-        },
+local servers = {'pyright', 'rust_analyzer', 'clangd'}
+for _, lsp in ipairs(servers) do
+    nvim_lsp[lsp].setup {
+        on_attach = on_attach,
+        capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
     }
+end
+
+require'nvim-treesitter.configs'.setup {
+    highlight = {
+        enable = true
+    },
+}
